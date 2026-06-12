@@ -10,17 +10,16 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:        #0D0D0F;
-    --surface:   #1A1A1E;
-    --surface2:  #242428;
-    --border:    #2E2E34;
-    --text:      #F0EEE9;
-    --muted:     #7A7A85;
+    --bg:        #F7F8FA;
+    --surface:   #FFFFFF;
+    --surface2:  #F0F1F4;
+    --border:    #E4E6EC;
+    --text:      #111318;
+    --muted:     #8A8F9E;
     --accent:    #126DFE;
-    --accent-dim:#0D4DB0;
-    --success:   #22C55E;
-    --warn:      #F59E0B;
-    --danger:    #EF4444;
+    --success:   #16A34A;
+    --warn:      #D97706;
+    --danger:    #DC2626;
   }
 
   html, body {
@@ -31,68 +30,52 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── CONFIG DRAWER ── */
-  #config-bar {
+  /* ── TOPBAR ── */
+  #topbar {
     background: var(--surface);
     border-bottom: 1px solid var(--border);
-    padding: 0 24px;
+    height: 52px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    height: 48px;
-    font-size: 12px;
+    padding: 0 32px;
+    gap: 8px;
   }
-  #config-bar label { color: var(--muted); white-space: nowrap; }
-  #config-bar input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+  .topbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
     color: var(--text);
-    font-family: 'Inter', monospace;
-    font-size: 11px;
-    padding: 4px 8px;
-    height: 28px;
-    outline: none;
-    transition: border-color .15s;
+    letter-spacing: -.01em;
   }
-  #config-bar input:focus { border-color: var(--accent); }
-  #worker-url { width: 340px; }
-  #perm-token { width: 240px; }
-  #bynder-domain { width: 200px; }
-  .config-sep { color: var(--border); user-select: none; }
+  .topbar-logo svg { flex-shrink: 0; }
+  .topbar-divider {
+    width: 1px; height: 16px;
+    background: var(--border);
+    margin: 0 4px;
+  }
+  .topbar-label {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--muted);
+  }
 
   /* ── HERO SEARCH ── */
   #hero {
-    padding: 64px 24px 48px;
-    max-width: 780px;
+    padding: 56px 24px 36px;
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
   }
 
-  .wordmark {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 40px;
-  }
-  .wordmark-dot {
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-  }
-
   .search-label {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 300;
     letter-spacing: -.02em;
     color: var(--text);
-    line-height: 1.2;
-    margin-bottom: 32px;
+    line-height: 1.25;
+    margin-bottom: 28px;
   }
   .search-label strong { font-weight: 600; }
 
@@ -100,34 +83,39 @@
     position: relative;
     display: flex;
     align-items: center;
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 6px 6px 18px;
+    transition: border-color .2s, box-shadow .2s;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
   }
+  .search-wrap:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(18,109,254,.1);
+  }
+
   #search-input {
-    width: 100%;
+    flex: 1;
     background: transparent;
     border: none;
-    border-bottom: 2px solid var(--border);
     color: var(--text);
     font-family: 'Inter', sans-serif;
-    font-size: 22px;
-    font-weight: 300;
-    letter-spacing: -.01em;
-    padding: 12px 56px 12px 4px;
+    font-size: 15px;
+    font-weight: 400;
     outline: none;
-    transition: border-color .2s;
+    padding: 8px 12px 8px 0;
     caret-color: var(--accent);
   }
   #search-input::placeholder { color: var(--muted); }
-  #search-input:focus { border-bottom-color: var(--accent); }
 
   #search-btn {
-    position: absolute;
-    right: 0;
     background: var(--accent);
     border: none;
     border-radius: 8px;
     color: #fff;
     cursor: pointer;
-    width: 40px; height: 40px;
+    width: 38px; height: 38px;
     display: flex; align-items: center; justify-content: center;
     transition: background .15s, transform .1s;
     flex-shrink: 0;
@@ -140,27 +128,36 @@
     margin-top: 14px;
     font-size: 12px;
     color: var(--muted);
-    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
   }
+  .hint-label { color: var(--muted); margin-right: 2px; }
   .hint span {
     display: inline-block;
-    background: var(--surface2);
+    background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 2px 8px;
-    margin-right: 6px;
+    border-radius: 20px;
+    padding: 3px 10px;
     cursor: pointer;
-    transition: border-color .15s, color .15s;
-    font-size: 11px;
+    transition: border-color .15s, color .15s, background .15s;
+    font-size: 11.5px;
+    color: var(--text);
   }
-  .hint span:hover { border-color: var(--accent); color: var(--text); }
+  .hint span:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(18,109,254,.04);
+  }
 
   /* ── STATUS BAR ── */
   #status {
-    max-width: 780px;
-    margin: 0 auto 16px;
+    max-width: 700px;
+    margin: 0 auto 20px;
     padding: 0 24px;
-    min-height: 24px;
+    min-height: 22px;
     font-size: 12px;
     color: var(--muted);
     display: flex;
@@ -169,13 +166,13 @@
   }
   #status.error { color: var(--danger); }
   #status.warn  { color: var(--warn); }
-  #status.ok    { color: var(--success); }
+  #status.ok    { color: var(--success); font-weight: 500; }
 
   /* ── RESULTS GRID ── */
   #results {
-    max-width: 1100px;
+    max-width: 1140px;
     margin: 0 auto;
-    padding: 0 24px 64px;
+    padding: 0 24px 72px;
     columns: 4 240px;
     column-gap: 16px;
   }
@@ -187,6 +184,7 @@
     border-radius: 12px;
     overflow: hidden;
     background: var(--surface);
+    border: 1px solid var(--border);
   }
   .skeleton-img {
     width: 100%;
@@ -195,17 +193,17 @@
   }
   .skeleton-body { padding: 12px; }
   .skeleton-line {
-    height: 10px;
+    height: 9px;
     border-radius: 4px;
     background: var(--surface2);
     animation: shimmer 1.4s infinite;
     margin-bottom: 8px;
   }
-  .skeleton-line.short { width: 55%; }
+  .skeleton-line.short { width: 50%; }
   @keyframes shimmer {
-    0%   { opacity: .5; }
-    50%  { opacity: 1; }
-    100% { opacity: .5; }
+    0%   { opacity: .4; }
+    50%  { opacity: .9; }
+    100% { opacity: .4; }
   }
 
   /* ── ASSET CARD ── */
@@ -218,12 +216,13 @@
     border: 1px solid var(--border);
     cursor: pointer;
     opacity: 0;
-    transform: translateY(12px);
-    animation: card-in .3s ease forwards;
-    transition: border-color .15s, transform .15s;
+    transform: translateY(10px);
+    animation: card-in .28s ease forwards;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
   }
   .asset-card:hover {
-    border-color: var(--accent);
+    border-color: #c0ccff;
+    box-shadow: 0 4px 16px rgba(18,109,254,.1);
     transform: translateY(-2px);
   }
   @keyframes card-in {
@@ -242,10 +241,10 @@
     align-items: center;
     justify-content: center;
     color: var(--muted);
-    font-size: 28px;
+    font-size: 24px;
   }
 
-  .card-body { padding: 12px; }
+  .card-body { padding: 10px 12px 12px; }
   .card-name {
     font-size: 12px;
     font-weight: 500;
@@ -265,12 +264,12 @@
   .card-ext {
     font-size: 10px;
     font-weight: 600;
-    letter-spacing: .06em;
+    letter-spacing: .05em;
     text-transform: uppercase;
     color: var(--muted);
     background: var(--surface2);
-    border-radius: 3px;
-    padding: 2px 5px;
+    border-radius: 4px;
+    padding: 2px 6px;
   }
   .card-score {
     font-size: 11px;
@@ -281,18 +280,25 @@
   /* ── EMPTY / ERROR STATES ── */
   #empty {
     display: none;
-    max-width: 500px;
-    margin: 40px auto;
+    max-width: 440px;
+    margin: 60px auto;
     text-align: center;
     padding: 0 24px;
   }
-  #empty .empty-icon { font-size: 40px; margin-bottom: 16px; }
-  #empty h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  #empty .empty-icon {
+    width: 48px; height: 48px;
+    background: var(--surface2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 22px;
+  }
+  #empty h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
   #empty p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
   /* ── SPINNER ── */
   .spinner {
-    width: 14px; height: 14px;
+    width: 13px; height: 13px;
     border: 2px solid var(--border);
     border-top-color: var(--accent);
     border-radius: 50%;
@@ -302,35 +308,29 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 600px) {
-    #config-bar { flex-wrap: wrap; height: auto; padding: 10px 16px; gap: 8px; }
-    #worker-url, #perm-token, #bynder-domain { width: 100%; }
-    .config-sep { display: none; }
     .search-label { font-size: 20px; }
-    #search-input { font-size: 18px; }
+    #search-input { font-size: 14px; }
     #results { columns: 2 140px; }
   }
 </style>
 </head>
 <body>
 
-<!-- CONFIG BAR -->
-<div id="config-bar">
-  <label>Worker</label>
-  <input id="worker-url" type="text" placeholder="https://your-worker.workers.dev" value="https://bynder-similarity-search.jamirahman.workers.dev/">
-  <span class="config-sep">|</span>
-  <label>Token</label>
-  <input id="perm-token" type="password" placeholder="Permanent token" value="759c06867bda1515045b6e3fa07a5234d0b1f384b6f8b037e7d0deb9546ebc78">
-  <span class="config-sep">|</span>
-  <label>Portal</label>
-  <input id="bynder-domain" type="text" placeholder="yourportal.bynder.com" value="">
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="topbar-logo">
+    <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
+      <rect width="32" height="32" rx="8" fill="#126DFE"/>
+      <path d="M8 8h7.5c3.5 0 6 2 6 5.5 0 2-1 3.5-2.5 4.5C21 19 22.5 21 22.5 24c0 3.5-2.5 6-7 6H8V8zm4 9h3c1.5 0 2.5-1 2.5-2.5S16.5 12 15 12h-3v5zm0 9h3.5c1.7 0 2.8-1 2.8-2.8 0-1.7-1.1-2.7-2.8-2.7H12v5.5z" fill="white"/>
+    </svg>
+    Bynder
+  </div>
+  <div class="topbar-divider"></div>
+  <span class="topbar-label">Natural Language Search</span>
 </div>
 
 <!-- HERO -->
 <div id="hero">
-  <div class="wordmark">
-    <div class="wordmark-dot"></div>
-    Bynder &nbsp;·&nbsp; Natural Language Search
-  </div>
   <div class="search-label">Describe what you're <strong>looking for</strong></div>
   <div class="search-wrap">
     <input
@@ -341,13 +341,13 @@
       spellcheck="false"
     />
     <button id="search-btn" title="Search">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
     </button>
   </div>
   <div class="hint">
-    Try:
+    <span class="hint-label">Try:</span>
     <span>product on white background</span>
     <span>team collaboration office</span>
     <span>bold typography red</span>
@@ -363,13 +363,16 @@
 
 <!-- EMPTY STATE -->
 <div id="empty">
-  <div class="empty-icon">◎</div>
+  <div class="empty-icon">🔍</div>
   <h3>No matching assets found</h3>
   <p>Try a different description, or check that AI indexing is enabled on this portal in Bynder's settings.</p>
 </div>
 
 <script>
 // ── CONFIG ──────────────────────────────────────────────────────────────────
+const WORKER_URL  = 'https://bynder-similarity-search.jamirahman.workers.dev/';
+const PERM_TOKEN  = '759c06867bda1515045b6e3fa07a5234d0b1f384b6f8b037e7d0deb9546ebc78';
+const BYNDER_DOMAIN = 'wave-us.getbynder.com';
 const MAX_RESULTS = 12;
 
 // ── UUID CONVERSION: v4 (8-4-4-4-12 lowercase) → ColdFusion (8-4-4-16 uppercase)
@@ -386,9 +389,6 @@ const searchBtn    = document.getElementById('search-btn');
 const resultsEl    = document.getElementById('results');
 const statusEl     = document.getElementById('status');
 const emptyEl      = document.getElementById('empty');
-const workerUrlEl  = document.getElementById('worker-url');
-const permTokenEl  = document.getElementById('perm-token');
-const bynderDomEl  = document.getElementById('bynder-domain');
 
 // ── HINT CHIPS ──────────────────────────────────────────────────────────────
 document.querySelectorAll('.hint span').forEach(chip => {
@@ -447,10 +447,7 @@ function renderCards(assets) {
     card.className = 'asset-card';
     card.style.animationDelay = `${i * 40}ms`;
 
-    const domain = bynderDomEl.value.trim();
-    const portalLink = domain
-      ? `https://${domain}/media/?mediaId=${asset.id}`
-      : '#';
+    const portalLink = `https://${BYNDER_DOMAIN}/media/?mediaId=${asset.id}`;
 
     const score = asset.similarityScore != null
       ? Math.round(asset.similarityScore * 100) + '%'
@@ -480,7 +477,7 @@ function renderCards(assets) {
       </div>`;
 
     card.addEventListener('click', () => {
-      if (portalLink !== '#') window.open(portalLink, '_blank');
+      window.open(portalLink, '_blank');
     });
 
     resultsEl.appendChild(card);
@@ -507,14 +504,8 @@ async function fetchAssetDetail(cfId, permToken, domain) {
 // ── MAIN SEARCH ─────────────────────────────────────────────────────────────
 async function runSearch() {
   const query      = searchInput.value.trim();
-  const workerUrl  = workerUrlEl.value.trim().replace(/\/$/, '');
-  const permToken  = permTokenEl.value.trim();
-  const domain     = bynderDomEl.value.trim();
 
   if (!query) { searchInput.focus(); return; }
-  if (!workerUrl) { setStatus('Worker URL is required — fill in the config bar above.', 'error'); return; }
-  if (!permToken)  { setStatus('Permanent token is required — fill in the config bar above.', 'error'); return; }
-  if (!domain)     { setStatus('Portal domain is required — e.g. yourportal.bynder.com', 'error'); return; }
 
   searchBtn.disabled = true;
   showSkeletons(MAX_RESULTS);
@@ -522,7 +513,7 @@ async function runSearch() {
 
   try {
     // Step 1: similarity search via Worker
-    const searchResp = await fetch(workerUrl, {
+    const searchResp = await fetch(WORKER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ textQuery: query })
@@ -555,7 +546,7 @@ async function runSearch() {
     const enriched = await Promise.all(
       top.map(async (item) => {
         const cfId   = v4ToColdFusion(item.assetId);
-        const detail = await fetchAssetDetail(cfId, permToken, domain);
+        const detail = await fetchAssetDetail(cfId, PERM_TOKEN, BYNDER_DOMAIN);
         if (!detail) return null;
         return { ...detail, similarityScore: item.similarityScore };
       })
