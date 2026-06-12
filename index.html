@@ -40,10 +40,9 @@
     padding: 0 32px;
     gap: 8px;
   }
-  .topbar-logo img {
-    height: 18px;
-    width: auto;
-    display: block;
+  .topbar-logo {
+    display: flex;
+    align-items: center;
   }
   .topbar-divider {
     width: 1px; height: 16px;
@@ -59,15 +58,15 @@
   .topbar-powered {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 11px;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 400;
     color: var(--muted);
   }
   .topbar-powered img {
-    height: 14px;
+    height: 20px;
     width: auto;
     display: block;
-    opacity: 0.7;
   }
 
   /* ── HERO SEARCH ── */
@@ -328,13 +327,16 @@
 <!-- TOPBAR -->
 <div id="topbar">
   <div class="topbar-logo">
-    <img src="https://dam.bynder.com/transform/025026c6-6fbc-4307-a0c2-437cdfaf407b/Bynder-Logo-Web-DAT" alt="Bynder">
+    <!-- Claude logo - correct asterisk mark -->
+    <svg height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Claude">
+      <path d="M12 2L12 6M12 18L12 22M2 12L6 12M18 12L22 12M4.93 4.93L7.76 7.76M16.24 16.24L19.07 19.07M19.07 4.93L16.24 7.76M7.76 16.24L4.93 19.07" stroke="#CC785C" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
   </div>
   <div class="topbar-divider"></div>
   <span class="topbar-label">Natural Language Search</span>
   <div class="topbar-spacer"></div>
   <div class="topbar-powered">
-    Powered by
+    <span>Powered by</span>
     <img src="https://dam.bynder.com/transform/025026c6-6fbc-4307-a0c2-437cdfaf407b/Bynder-Logo-Web-DAT" alt="Bynder">
   </div>
 </div>
