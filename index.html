@@ -316,9 +316,49 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 600px) {
-    .search-label { font-size: 20px; }
-    #search-input { font-size: 14px; }
-    #results { columns: 2 140px; }
+    /* Topbar */
+    #topbar {
+      height: auto;
+      padding: 10px 16px;
+      flex-wrap: wrap;
+    }
+    .topbar-divider { display: none; }
+    .topbar-label { display: none; }
+    .topbar-spacer { flex: 1; }
+    .topbar-powered { font-size: 11px; gap: 5px; }
+    .topbar-powered img { height: 20px; }
+
+    /* Hero */
+    #hero { padding: 28px 16px 20px; }
+    .search-label { font-size: 18px; margin-bottom: 20px; }
+
+    /* Search */
+    .search-wrap { padding: 4px 4px 4px 14px; border-radius: 10px; }
+    #search-input { font-size: 14px; padding: 8px 8px 8px 0; }
+    #search-btn { width: 34px; height: 34px; border-radius: 7px; }
+
+    /* Status */
+    #status { padding: 0 16px; font-size: 11px; }
+
+    /* Results grid — single column on very small, 2 col otherwise */
+    #results {
+      columns: 2 150px;
+      column-gap: 10px;
+      padding: 0 16px 48px;
+    }
+    .asset-card { margin-bottom: 10px; border-radius: 8px; }
+    .card-body { padding: 8px; }
+    .card-name { font-size: 12px; margin-bottom: 5px; }
+    .card-meta { gap: 4px; }
+    .card-ext {
+      font-size: 10px;
+      padding: 2px 5px;
+    }
+    .card-score { font-size: 11px; }
+  }
+
+  @media (max-width: 360px) {
+    #results { columns: 1; }
   }
 </style>
 </head>
@@ -348,7 +388,7 @@
     <input
       id="search-input"
       type="text"
-      placeholder="e.g. lifestyle photography of people outdoors in summer"
+      placeholder="Describe the asset you're looking for…"
       autocomplete="off"
       spellcheck="false"
     />
@@ -358,6 +398,7 @@
       </svg>
     </button>
   </div>
+
 </div>
 
 <!-- STATUS -->
