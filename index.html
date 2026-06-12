@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bynder NLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0D0D0F;
+    --surface:   #1A1A1E;
+    --surface2:  #242428;
+    --border:    #2E2E34;
+    --text:      #F0EEE9;
+    --muted:     #7A7A85;
+    --accent:    #126DFE;
+    --accent-dim:#0D4DB0;
+    --success:   #22C55E;
+    --warn:      #F59E0B;
+    --danger:    #EF4444;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── CONFIG DRAWER ── */
+  #config-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 48px;
+    font-size: 12px;
+  }
+  #config-bar label { color: var(--muted); white-space: nowrap; }
+  #config-bar input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'Inter', monospace;
+    font-size: 11px;
+    padding: 4px 8px;
+    height: 28px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  #config-bar input:focus { border-color: var(--accent); }
+  #worker-url { width: 340px; }
+  #perm-token { width: 240px; }
+  #bynder-domain { width: 200px; }
+  .config-sep { color: var(--border); user-select: none; }
+
+  /* ── HERO SEARCH ── */
+  #hero {
+    padding: 64px 24px 48px;
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 40px;
+  }
+  .wordmark-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+  }
+
+  .search-label {
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: -.02em;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 32px;
+  }
+  .search-label strong { font-weight: 600; }
+
+  .search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  #search-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--border);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -.01em;
+    padding: 12px 56px 12px 4px;
+    outline: none;
+    transition: border-color .2s;
+    caret-color: var(--accent);
+  }
+  #search-input::placeholder { color: var(--muted); }
+  #search-input:focus { border-bottom-color: var(--accent); }
+
+  #search-btn {
+    position: absolute;
+    right: 0;
+    background: var(--accent);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, transform .1s;
+    flex-shrink: 0;
+  }
+  #search-btn:hover { background: #1a7fff; }
+  #search-btn:active { transform: scale(.95); }
+  #search-btn:disabled { background: var(--surface2); cursor: not-allowed; }
+
+  .hint {
+    margin-top: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: left;
+  }
+  .hint span {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+    font-size: 11px;
+  }
+  .hint span:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ── STATUS BAR ── */
+  #status {
+    max-width: 780px;
+    margin: 0 auto 16px;
+    padding: 0 24px;
+    min-height: 24px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #status.error { color: var(--danger); }
+  #status.warn  { color: var(--warn); }
+  #status.ok    { color: var(--success); }
+
+  /* ── RESULTS GRID ── */
+  #results {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 64px;
+    columns: 4 240px;
+    column-gap: 16px;
+  }
+
+  /* ── SKELETON ── */
+  .skeleton-card {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .skeleton-img {
+    width: 100%;
+    background: var(--surface2);
+    animation: shimmer 1.4s infinite;
+  }
+  .skeleton-body { padding: 12px; }
+  .skeleton-line {
+    height: 10px;
+    border-radius: 4px;
+    background: var(--surface2);
+    animation: shimmer 1.4s infinite;
+    margin-bottom: 8px;
+  }
+  .skeleton-line.short { width: 55%; }
+  @keyframes shimmer {
+    0%   { opacity: .5; }
+    50%  { opacity: 1; }
+    100% { opacity: .5; }
+  }
+
+  /* ── ASSET CARD ── */
+  .asset-card {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: card-in .3s ease forwards;
+    transition: border-color .15s, transform .15s;
+  }
+  .asset-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+  @keyframes card-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-thumb {
+    width: 100%;
+    display: block;
+    background: var(--surface2);
+    object-fit: cover;
+  }
+  .card-thumb.no-thumb {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 28px;
+  }
+
+  .card-body { padding: 12px; }
+  .card-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.4;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .card-ext {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+    border-radius: 3px;
+    padding: 2px 5px;
+  }
+  .card-score {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  /* ── EMPTY / ERROR STATES ── */
+  #empty {
+    display: none;
+    max-width: 500px;
+    margin: 40px auto;
+    text-align: center;
+    padding: 0 24px;
+  }
+  #empty .empty-icon { font-size: 40px; margin-bottom: 16px; }
+  #empty h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  #empty p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ── SPINNER ── */
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 600px) {
+    #config-bar { flex-wrap: wrap; height: auto; padding: 10px 16px; gap: 8px; }
+    #worker-url, #perm-token, #bynder-domain { width: 100%; }
+    .config-sep { display: none; }
+    .search-label { font-size: 20px; }
+    #search-input { font-size: 18px; }
+    #results { columns: 2 140px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CONFIG BAR -->
+<div id="config-bar">
+  <label>Worker</label>
+  <input id="worker-url" type="text" placeholder="https://your-worker.workers.dev" value="https://bynder-similarity-search.jamirahman.workers.dev/">
+  <span class="config-sep">|</span>
+  <label>Token</label>
+  <input id="perm-token" type="password" placeholder="Permanent token" value="759c06867bda1515045b6e3fa07a5234d0b1f384b6f8b037e7d0deb9546ebc78">
+  <span class="config-sep">|</span>
+  <label>Portal</label>
+  <input id="bynder-domain" type="text" placeholder="yourportal.bynder.com" value="">
+</div>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="wordmark">
+    <div class="wordmark-dot"></div>
+    Bynder &nbsp;·&nbsp; Natural Language Search
+  </div>
+  <div class="search-label">Describe what you're <strong>looking for</strong></div>
+  <div class="search-wrap">
+    <input
+      id="search-input"
+      type="text"
+      placeholder="e.g. lifestyle photography of people outdoors in summer"
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <button id="search-btn" title="Search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </button>
+  </div>
+  <div class="hint">
+    Try:
+    <span>product on white background</span>
+    <span>team collaboration office</span>
+    <span>bold typography red</span>
+    <span>food close-up warm light</span>
+  </div>
+</div>
+
+<!-- STATUS -->
+<div id="status"></div>
+
+<!-- RESULTS -->
+<div id="results"></div>
+
+<!-- EMPTY STATE -->
+<div id="empty">
+  <div class="empty-icon">◎</div>
+  <h3>No matching assets found</h3>
+  <p>Try a different description, or check that AI indexing is enabled on this portal in Bynder's settings.</p>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const MAX_RESULTS = 12;
+
+// ── UUID CONVERSION: v4 (8-4-4-4-12 lowercase) → ColdFusion (8-4-4-16 uppercase)
+function v4ToColdFusion(uuid) {
+  // Remove hyphens, uppercase
+  const clean = uuid.replace(/-/g, '').toUpperCase();
+  // Regroup as 8-4-4-16
+  return `${clean.slice(0,8)}-${clean.slice(8,12)}-${clean.slice(12,16)}-${clean.slice(16)}`;
+}
+
+// ── DOM REFS ────────────────────────────────────────────────────────────────
+const searchInput  = document.getElementById('search-input');
+const searchBtn    = document.getElementById('search-btn');
+const resultsEl    = document.getElementById('results');
+const statusEl     = document.getElementById('status');
+const emptyEl      = document.getElementById('empty');
+const workerUrlEl  = document.getElementById('worker-url');
+const permTokenEl  = document.getElementById('perm-token');
+const bynderDomEl  = document.getElementById('bynder-domain');
+
+// ── HINT CHIPS ──────────────────────────────────────────────────────────────
+document.querySelectorAll('.hint span').forEach(chip => {
+  chip.addEventListener('click', () => {
+    searchInput.value = chip.textContent;
+    searchInput.focus();
+  });
+});
+
+// ── STATUS HELPERS ──────────────────────────────────────────────────────────
+function setStatus(msg, type = '') {
+  statusEl.textContent = msg;
+  statusEl.className = type;
+}
+function setStatusWithSpinner(msg) {
+  statusEl.innerHTML = '';
+  statusEl.className = '';
+  const spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  statusEl.appendChild(spinner);
+  const t = document.createTextNode(' ' + msg);
+  statusEl.appendChild(t);
+}
+
+// ── SKELETON LOADERS ────────────────────────────────────────────────────────
+function showSkeletons(n) {
+  resultsEl.innerHTML = '';
+  emptyEl.style.display = 'none';
+  const heights = [180, 240, 160, 200, 220, 140, 190, 170, 260, 150, 210, 180];
+  for (let i = 0; i < n; i++) {
+    const h = heights[i % heights.length];
+    resultsEl.innerHTML += `
+      <div class="skeleton-card">
+        <div class="skeleton-img" style="height:${h}px"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>`;
+  }
+}
+
+// ── RENDER CARDS ────────────────────────────────────────────────────────────
+function renderCards(assets) {
+  resultsEl.innerHTML = '';
+
+  if (!assets || assets.length === 0) {
+    emptyEl.style.display = 'block';
+    return;
+  }
+
+  emptyEl.style.display = 'none';
+
+  assets.forEach((asset, i) => {
+    const card = document.createElement('div');
+    card.className = 'asset-card';
+    card.style.animationDelay = `${i * 40}ms`;
+
+    const domain = bynderDomEl.value.trim();
+    const portalLink = domain
+      ? `https://${domain}/media/?mediaId=${asset.id}`
+      : '#';
+
+    const score = asset.similarityScore != null
+      ? Math.round(asset.similarityScore * 100) + '%'
+      : '';
+
+    const ext = (asset.extension && asset.extension[0])
+      ? asset.extension[0].toUpperCase()
+      : '';
+
+    const thumb = asset.thumbnails?.webimage || asset.thumbnails?.thul || null;
+
+    let imgHtml = '';
+    if (thumb) {
+      imgHtml = `<img class="card-thumb" src="${thumb}" alt="${escHtml(asset.name)}" loading="lazy" onerror="this.style.display='none'">`;
+    } else {
+      imgHtml = `<div class="card-thumb no-thumb">◻</div>`;
+    }
+
+    card.innerHTML = `
+      ${imgHtml}
+      <div class="card-body">
+        <div class="card-name" title="${escHtml(asset.name)}">${escHtml(asset.name)}</div>
+        <div class="card-meta">
+          ${ext ? `<span class="card-ext">${ext}</span>` : '<span></span>'}
+          ${score ? `<span class="card-score">${score}</span>` : ''}
+        </div>
+      </div>`;
+
+    card.addEventListener('click', () => {
+      if (portalLink !== '#') window.open(portalLink, '_blank');
+    });
+
+    resultsEl.appendChild(card);
+  });
+}
+
+function escHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── ASSET DETAIL LOOKUP ─────────────────────────────────────────────────────
+async function fetchAssetDetail(cfId, permToken, domain) {
+  // cfId is already in ColdFusion format
+  const url = `https://${domain}/api/v4/media/${cfId}/`;
+  const resp = await fetch(url, {
+    headers: { Authorization: `Bearer ${permToken}` }
+  });
+  if (!resp.ok) return null;
+  const data = await resp.json();
+  return data;
+}
+
+// ── MAIN SEARCH ─────────────────────────────────────────────────────────────
+async function runSearch() {
+  const query      = searchInput.value.trim();
+  const workerUrl  = workerUrlEl.value.trim().replace(/\/$/, '');
+  const permToken  = permTokenEl.value.trim();
+  const domain     = bynderDomEl.value.trim();
+
+  if (!query) { searchInput.focus(); return; }
+  if (!workerUrl) { setStatus('Worker URL is required — fill in the config bar above.', 'error'); return; }
+  if (!permToken)  { setStatus('Permanent token is required — fill in the config bar above.', 'error'); return; }
+  if (!domain)     { setStatus('Portal domain is required — e.g. yourportal.bynder.com', 'error'); return; }
+
+  searchBtn.disabled = true;
+  showSkeletons(MAX_RESULTS);
+  setStatusWithSpinner(`Searching for "${query}"…`);
+
+  try {
+    // Step 1: similarity search via Worker
+    const searchResp = await fetch(workerUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ textQuery: query })
+    });
+
+    if (!searchResp.ok) {
+      const errData = await searchResp.json().catch(() => ({}));
+      throw new Error(errData.error || `Worker returned ${searchResp.status}`);
+    }
+
+    const searchData = await searchResp.json();
+    const rawAssets  = searchData.assets || [];
+
+    if (rawAssets.length === 0) {
+      resultsEl.innerHTML = '';
+      emptyEl.style.display = 'block';
+      setStatus('No results — AI indexing may not be active on this portal.', 'warn');
+      searchBtn.disabled = false;
+      return;
+    }
+
+    // Take top MAX_RESULTS, sorted by score descending
+    const top = rawAssets
+      .sort((a, b) => (b.similarityScore ?? 0) - (a.similarityScore ?? 0))
+      .slice(0, MAX_RESULTS);
+
+    setStatusWithSpinner(`Found ${rawAssets.length} result${rawAssets.length !== 1 ? 's' : ''} — loading details…`);
+
+    // Step 2: enrich with asset details (parallel)
+    const enriched = await Promise.all(
+      top.map(async (item) => {
+        const cfId   = v4ToColdFusion(item.assetId);
+        const detail = await fetchAssetDetail(cfId, permToken, domain);
+        if (!detail) return null;
+        return { ...detail, similarityScore: item.similarityScore };
+      })
+    );
+
+    const valid = enriched.filter(Boolean);
+
+    if (valid.length === 0) {
+      // Similarity search returned IDs but detail lookups all failed
+      resultsEl.innerHTML = '';
+      emptyEl.style.display = 'block';
+      setStatus('Asset details could not be loaded — check your permanent token and portal domain.', 'error');
+      searchBtn.disabled = false;
+      return;
+    }
+
+    renderCards(valid);
+
+    const shown = valid.length;
+    const total = rawAssets.length;
+    const msg   = total > MAX_RESULTS
+      ? `Showing top ${shown} of ${total} matches`
+      : `${shown} match${shown !== 1 ? 'es' : ''} found`;
+
+    setStatus(msg, 'ok');
+
+  } catch (err) {
+    resultsEl.innerHTML = '';
+    emptyEl.style.display = 'none';
+    let msg = err.message || 'Unknown error';
+    if (msg.includes('Failed to fetch') || msg.includes('NetworkError')) {
+      msg = 'Could not reach the Worker — check the URL and that CORS is enabled.';
+    }
+    setStatus(msg, 'error');
+  }
+
+  searchBtn.disabled = false;
+}
+
+// ── EVENTS ──────────────────────────────────────────────────────────────────
+searchBtn.addEventListener('click', runSearch);
+searchInput.addEventListener('keydown', e => {
+  if (e.key === 'Enter') runSearch();
+});
+</script>
+</body>
+</html>
