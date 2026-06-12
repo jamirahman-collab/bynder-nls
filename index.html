@@ -40,16 +40,11 @@
     padding: 0 32px;
     gap: 8px;
   }
-  .topbar-logo {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -.01em;
+  .topbar-logo img {
+    height: 18px;
+    width: auto;
+    display: block;
   }
-  .topbar-logo svg { flex-shrink: 0; }
   .topbar-divider {
     width: 1px; height: 16px;
     background: var(--border);
@@ -59,6 +54,20 @@
     font-size: 12px;
     font-weight: 400;
     color: var(--muted);
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-powered {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .topbar-powered img {
+    height: 14px;
+    width: auto;
+    display: block;
+    opacity: 0.7;
   }
 
   /* ── HERO SEARCH ── */
@@ -319,14 +328,15 @@
 <!-- TOPBAR -->
 <div id="topbar">
   <div class="topbar-logo">
-    <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
-      <rect width="32" height="32" rx="8" fill="#126DFE"/>
-      <path d="M8 8h7.5c3.5 0 6 2 6 5.5 0 2-1 3.5-2.5 4.5C21 19 22.5 21 22.5 24c0 3.5-2.5 6-7 6H8V8zm4 9h3c1.5 0 2.5-1 2.5-2.5S16.5 12 15 12h-3v5zm0 9h3.5c1.7 0 2.8-1 2.8-2.8 0-1.7-1.1-2.7-2.8-2.7H12v5.5z" fill="white"/>
-    </svg>
-    Bynder
+    <img src="https://dam.bynder.com/transform/025026c6-6fbc-4307-a0c2-437cdfaf407b/Bynder-Logo-Web-DAT" alt="Bynder">
   </div>
   <div class="topbar-divider"></div>
   <span class="topbar-label">Natural Language Search</span>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-powered">
+    Powered by
+    <img src="https://dam.bynder.com/transform/025026c6-6fbc-4307-a0c2-437cdfaf407b/Bynder-Logo-Web-DAT" alt="Bynder">
+  </div>
 </div>
 
 <!-- HERO -->
